@@ -1,0 +1,3 @@
+C:\mongodb\bin>mongoimport.exe --db mapamun_Dengue --collection municipio E:\municipio.json
+C:\mongodb\bin>mongoexport.exe --db mapamun_Dengue --collection municipio --out
+E:\municipio.json
