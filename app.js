@@ -31,8 +31,8 @@ if ('development' == app.get('env')) {
 //Conexión a Mongoose.
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-//mongoose.connect('mongodb://localhost/mapamun_Dengue', function(error){
-mongoose.connect('mongodb://yeison:oncecaldas11@ds053320.mongolab.com:53320/mapamun_dengue', function(error){
+mongoose.connect('mongodb://localhost/mapamun_Dengue', function(error){
+//mongoose.connect('mongodb://yeison:oncecaldas11@ds053320.mongolab.com:53320/mapamun_dengue', function(error){
    if(error){
       throw error; 
    }else{

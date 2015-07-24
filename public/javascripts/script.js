@@ -103,7 +103,8 @@ aplicacion.controller('Municipios', function($scope, $http) {
                     // WestLangley
                     //console.log(vector_long[0][0])
                     var camera, scene, renderer, controls;
-
+                    var projector, mouse = { x: 0, y: 0 }, INTERSECTED;
+                    var context1, texture1;
                     // dom
 
 
@@ -156,12 +157,36 @@ aplicacion.controller('Municipios', function($scope, $http) {
 							bevelEnabled: false,
                             extrudeMaterial: 1,	amount:0.2, //cantidad de profundidad 
 				        };
+                        canvas1 = document.createElement('canvas');
+                        context1 = canvas1.getContext('2d');
+                        context1.font = "Bold 20px Arial";
+                        context1.fillStyle = "rgba(0,0,0,0.95)";
+                        context1.fillText('Hello, world!', 0, 20);
+
+                        // canvas contents will be used for a texture
+                        texture1 = new THREE.Texture(canvas1) 
+                        texture1.needsUpdate = true;
+                
+                        var spriteMaterial = new THREE.SpriteMaterial( { map: texture1, useScreenCoordinates: true, alignment: THREE.SpriteAlignment.topLeft } );
+	
+                        sprite1 = new THREE.Sprite( spriteMaterial );
+                        sprite1.scale.set(200,100,1.0);
+                        sprite1.position.set( 1000, 1000, 1000 );
+                        scene.add( sprite1 );	
+                
                         var textura = new THREE.ImageUtils.loadTexture('img/muro.jpg');
                 	//repetir la textura figura
 					   textura.repeat.set(0.06,0.06);
 					//repetir la textura de la figura
 					//textura.wrapS = textura.wrapT = THREE.repeatWrapping; conflicto
-					
+					  function onDocumentMouseMove( event ) {
+
+                                //event.preventDefault();
+                                sprite1.position.set( event.clientX, event.clientY - 20, 0 );
+                                mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+                                mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+
+                            }
                 	// agregamos un material para que el punto tenga color
                 //Material de la figura
 					   var material = new THREE.MeshBasicMaterial({color:0XFF0000,  vertexColors: THREE.VertexColors,shading: THREE.FlatShading, wireframe:false});
@@ -196,6 +221,9 @@ aplicacion.controller('Municipios', function($scope, $http) {
                                
                                 municipios[i] = new THREE.Mesh( extrude_geometria[i], materialFront[i] );
                                 
+                                municipios[i].name=$scope.datosMunicipio[i].nombre;     
+                               
+                          
 
 
                                 scene.add(municipios[i]);
@@ -210,11 +238,19 @@ aplicacion.controller('Municipios', function($scope, $http) {
                                 scene.add( line[i] );
                                 scene.add( lineTrasera[i] );
 
-
+                           
                         }
+                        	projector = new THREE.Projector();
+	
+	// when the mouse moves, call the given function
+	document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+	
                 
                 
-                         var array_anio=new Array();
+                    
+                          
+
+                       var array_anio=new Array();
                 
                        //contiene los key de los a;os desde 2007 a 2015                                            
                        array_saberObjanio=Object.keys($scope.datosMunicipio[0].historico.dengue);
@@ -255,19 +291,37 @@ aplicacion.controller('Municipios', function($scope, $http) {
 
                             }
                         }
-                
+                         
                         for(var i in  $scope.datosMunicipio ){
-                            municipios_valor[i]={nombre: $scope.datosMunicipio[i].nombre, valorDengue:array_anio[0][i].mun_dengue }
-                
+                            municipios[i].userData={nombre: $scope.datosMunicipio[i].nombre, valorDengue:0 }
+                            
                         }
                         
                         //método para cambiar de año
-                        $( "#slider-range-max" ).on( "slide", function( event, ui ) {
+
+                      
+function deMenorAMayor(elem1, elem2) {return elem1-elem2;}
+
+function deMayorAMenor(elem1, elem2) {return elem2-elem1;}
+                        // $( "#slider-range-max" ).on( "slide", function( event, ui ) {
+                         $( "#slider-range-max" ).on( "slidestop", function( event, ui ) {
                             anio= $( "#amount" ).val( ui.value );
                             anio=($( "#amount" ).val());
+                            
+                            
+                        var dengueDatos=new Array();  
+                        for (var i in  $scope.datosMunicipio){
+                                  vector_lat.push($scope.datosMunicipio[i].coordenadas.latitud);
+                                  vector_long.push($scope.datosMunicipio[i].coordenadas.longitud);
+                                  dengueDatos.push(municipios[i].userData.valorDengue);
+
+                        }       
+                        console.log(dengueDatos);
+                             var algo=dengueDatos.sort(deMayorAMenor);
+                             console.log(algo);
                             pintarMun();
                        });  
-
+                        
                     
                         var array_saberObjmeses=Object.keys(array_anio[0][0]);
                // console.log(array_saberObjmeses)  
@@ -275,7 +329,7 @@ aplicacion.controller('Municipios', function($scope, $http) {
                 
                          function pintarMun(){
 
-                             //console.log(anio);
+                          
                         var posicion_anio="";
                          posicion_anio=array_saberObjanio.indexOf(String(anio));
                          var hayCeroCaso=false; 
@@ -292,13 +346,16 @@ aplicacion.controller('Municipios', function($scope, $http) {
 
                                casosDengue+=array_anio[posicion_anio][i][array_saberObjmeses[a]].casos;
                        }
-                           municipios_valor[i].valorDengue=casosDengue;
+                           municipios[i].userData.valorDengue=casosDengue;
+                           
+                            
+                        
                                municipios[i].visible = false;
                            
                             if($("#c"+i).is(':checked')){
 
-                                                if(municipios_valor[i].valorDengue!=0 ){
-                                                    array_dengue.push(municipios_valor[i].valorDengue);
+                                                if(municipios[i].userData.valorDengue!=0 ){
+                                                    array_dengue.push(municipios[i].userData.valorDengue);
                                                 }
                                                 else{
                                                     hayCeroCaso=true;  //indica si hay almenos algun municipio con valor de cero
@@ -358,7 +415,7 @@ aplicacion.controller('Municipios', function($scope, $http) {
 
                                        $('.ocultar').show('fade');
 
-                                       var tabla="<table id='myTable' class='tablesorter' style='border: 0px solid;' > <thead><tr><th>Riesgo</th><th>Municipio</th><th>Casos</th>                           </tr> </thead><tbody>";
+                                       var tabla="<table id='myTable' class='tablesorter' style='border: 0px solid; border-collapse: separate;border-spacing: 0px 5.5px;' > <thead><tr><th>Riesgo</th><th>Municipio</th><th>Casos</th>                           </tr> </thead><tbody>";
 
                                        for (var i in  municipios){
 
@@ -369,7 +426,7 @@ aplicacion.controller('Municipios', function($scope, $http) {
                                             }
 
                                                var denominador=parseInt(max)-parseInt(min);
-                                               if(denominador==0 && municipios_valor[i].valorDengue!=0){
+                                               if(denominador==0 && municipios[i].userData.valorDengue!=0){
                                                 municipios[i].material.color.set("#FF"+"00"+"00");
                                                      //municipios[i].setMap(map);
 
@@ -380,7 +437,7 @@ aplicacion.controller('Municipios', function($scope, $http) {
 
 
 
-                                                    var numerador=max-municipios_valor[i].valorDengue;
+                                                    var numerador=max-municipios[i].userData.valorDengue;
 
                                                     var colorhex=parseInt((((numerador)/(denominador)))*255);
                                                     colorhex=(d2h(colorhex));
@@ -390,7 +447,7 @@ aplicacion.controller('Municipios', function($scope, $http) {
 
                                                     municipios[i].material.color.set(colorhex);
 
-                                                if(municipios_valor[i].valorDengue==(0)){
+                                                if(municipios[i].userData.valorDengue==(0)){
                                                     
                                                      municipios[i].material.color.set("#FFFFFF");
 
@@ -402,7 +459,7 @@ aplicacion.controller('Municipios', function($scope, $http) {
 
 
 
-                                                tabla+=	 "<tr><td align='center' bgcolor="+"'"+(municipios[i].material.color.getHex().toString(16))+"'"+" style='border:1px solid #000000'>"+"</td><td align='center' style='height:1px;'>"+municipios_valor[i].nombre+"</td><td align='center' >"+municipios_valor[i].valorDengue+"</td></tr>";  
+                                                tabla+=	 "<tr><td align='center' bgcolor="+"'"+(municipios[i].material.color.getHex().toString(16))+"'"+" style='border:0px solid #000000; '>"+"</td><td align='center' style='height:1px;'>"+municipios[i].userData.nombre+"</td><td align='center' >"+municipios[i].userData.valorDengue+"</td></tr>";  
 
 
 
@@ -591,7 +648,6 @@ var concatena_municipios="<center><table>";
                              pintarMun();
 
 
-
                         }); //cierre de change
                    
                 
@@ -630,12 +686,12 @@ var concatena_municipios="<center><table>";
                 
                 */
                 
+
                 
+
+              
                 pintarMun();
                 
-                
-                        
-
                         // figura
                                     	/*  municipios[0].material.color.set( "#00FF00" );
                        municipios[2].visible = false;
@@ -644,7 +700,41 @@ var concatena_municipios="<center><table>";
                     */
                       
 
+/*
+   var xValues = [];
+var yValues = [];
 
+function circle_coo(radius, steps, centerX, centerY){
+xValues = [centerX];
+yValues = [centerY];
+for (var i = 0; i < steps; i++) {
+    xValues[i] = (centerX + radius * Math.cos(2 * Math.PI * i / steps));
+    yValues[i] = (centerY + radius * Math.sin(2 * Math.PI * i / steps));
+}
+}
+
+circle_coo(20,500,0,0);
+
+a = 0;
+function render() {
+        //municipios[0].rotation.y=municipios[0].rotation.y+0.01;
+      //camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 10000);
+
+    if(a<xValues.length){
+        camera.position.set( xValues[a], 0, yValues[a] );
+        camera.lookAt(scene.position);
+        a=a+1;
+    }
+    else
+    {
+        //camera.position.set( 0, 0, 20 );
+       // camera.lookAt(scene.position);
+        a = 0;
+    }
+    
+    renderer.render( scene, camera );
+}
+*/
                     // axes
                     //scene.add( new THREE.AxisHelper() );
 
@@ -654,12 +744,96 @@ var concatena_municipios="<center><table>";
                         renderer.render( scene, camera );
 
                     }
+          
+                
+function update()
+{
+	// find intersections
+
+	// create a Ray with origin at the mouse position
+	//   and direction into the scene (camera direction)
+	var vector = new THREE.Vector3( mouse.x, mouse.y, 1 );
+	projector.unprojectVector( vector, camera );
+	
+    
+
+			
+    
+    
+    
+    var ray = new THREE.Raycaster( camera.position, vector.sub( camera.position ).normalize() );
+
+	// create an array containing all objects in the scene with which the ray intersects
+	var intersects = ray.intersectObjects( municipios );
+    
+	// INTERSECTED = the object in the scene currently closest to the camera 
+	//		and intersected by the Ray projected from the mouse position 	
+	
+	// if there is one (or more) intersections
+	if ( intersects.length > 0 )
+	{
+		// if the closest object intersected is not the currently stored intersection object
+		if ( intersects[ 0 ].object != INTERSECTED ) 
+		{
+		    // restore previous intersection object (if it exists) to its original color
+			if ( INTERSECTED ) 
+				INTERSECTED.material.color.setHex( INTERSECTED.currentHex );
+			// store reference to closest object as current intersection object
+			INTERSECTED = intersects[ 0 ].object;
+			// store color of closest object (for later restoration)
+			INTERSECTED.currentHex = INTERSECTED.material.color.getHex();
+			// set a new color for closest object
+			INTERSECTED.material.color.set("#4682B4");
+            material.color.set("#4682B4");
+            // update text, if it has a "name" field.
+			if ( intersects[ 0 ].object.name )
+			{
+			    context1.clearRect(0,0,640,480);
+				var message = intersects[ 0 ].object.name+": "+intersects[ 0 ].object.userData.valorDengue;
+				var metrics = context1.measureText(message);
+				var width = metrics.width;
+				context1.fillStyle = "rgba(0,0,0,0.95)"; // black border
+				context1.fillRect( 0,0, width+8,20+8);
+				context1.fillStyle = "rgba(255,255,255,0.95)"; // white filler
+				context1.fillRect( 2,2, width+4,20+4 );
+				context1.fillStyle = "rgba(0,0,0,1)"; // text color
+				context1.fillText( message, 4,20 );
+				texture1.needsUpdate = true;
+			}
+			else
+			{
+				context1.clearRect(0,0,300,300);
+				texture1.needsUpdate = true;
+			}
+		}
+	} 
+	else // there are no intersections
+	{
+		// restore previous intersection object (if it exists) to its original color
+        if ( INTERSECTED ) 
+			INTERSECTED.material.color.setHex( INTERSECTED.currentHex );
+		// remove previous intersection object reference
+		//     by setting current intersection object to "nothing"
+		INTERSECTED = null;
+		context1.clearRect(0,0,300,300);
+		texture1.needsUpdate = true;
+	}
+
+/*
+	if ( keyboard.pressed("z") ) 
+	{ 
+		// do something
+	}
+*/	
+	controls.update();
+	//stats.update();
+}
 
                     // animate/*
                     function animate() {
 
                         requestAnimationFrame( animate );
-
+                        update();
                         controls.update();
 
                         render();
@@ -682,4 +856,4 @@ var concatena_municipios="<center><table>";
 
 
     
-});
+}); //SCRIPT bueno
