@@ -7,7 +7,7 @@ aplicacion.controller('Municipios', function($scope, $http) {
               var imagenScreen=document.getElementById("fullscreen");
 
       if ((document.fullScreenElement && document.fullScreenElement !== null) ||    // metodo alternativo
-          (!document.mozFullScreen && !document.webkitIsFullScreen)) { 
+          (!document.mozFullScreen && !document.webkitIsFullScreen)) {
           imagenScreen.src='../img/salirexpandir.png';
           imagenScreen.title='Salir de pantalla Completa';
 
@@ -53,7 +53,7 @@ aplicacion.controller('Municipios', function($scope, $http) {
           });
 
      
-		
+        
      $( "#amount" ).val( $( "#slider-range-max" ).slider( "value" ) );    
     /*$scope._id = null;
     $scope.municipio = '';
@@ -74,9 +74,9 @@ aplicacion.controller('Municipios', function($scope, $http) {
 
 
                 function d2h(d) { return (+d).toString(16); }
-	
+    
                       $('.ocultar').hide();  //oculta elementos del menu
-                	
+                    
                     var coordenadas_Mun= new Array();
                     var coordenadas_Mun_aux= new Array();
 
@@ -94,7 +94,7 @@ aplicacion.controller('Municipios', function($scope, $http) {
                           vector_long.push($scope.datosMunicipio[i].coordenadas.longitud);
 
                     }
-	
+    
  
 
                     // Closed Line from 3D Points
@@ -124,16 +124,17 @@ aplicacion.controller('Municipios', function($scope, $http) {
                 
                 
                     camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 10000);
-                    camera.position.set( 0, 0, 20 );
+                    //camera.position.set( 0, 0, 20 );
+                    camera.position.set(2.4457938219139463,  0,  17.37913738929295)
                     camera.lookAt(scene.position);
                     scene.add(camera);
                     var skyBoxGeometry = new THREE.CubeGeometry( 10000, 10000, 10000 );
                 
                     Textura_plano=new THREE.ImageUtils.loadTexture("img/gris.jpg");
-					Textura_plano.wrapS=Textura_plano.wrapT=THREE.RepeatWrapping;
-					//Textura_plano.repeat.set(1000,1000);
-					// Material y agregado la textura
-					Material_plano=new THREE.MeshBasicMaterial({map:Textura_plano,side:THREE.DoubleSide});
+                    Textura_plano.wrapS=Textura_plano.wrapT=THREE.RepeatWrapping;
+                    //Textura_plano.repeat.set(1000,1000);
+                    // Material y agregado la textura
+                    Material_plano=new THREE.MeshBasicMaterial({map:Textura_plano,side:THREE.DoubleSide});
                 
                     //var skyBoxMaterial = new THREE.MeshBasicMaterial( { color: "#AFAFAF", side: THREE.BackSide } );
                     var skyBox = new THREE.Mesh( skyBoxGeometry, Material_plano );
@@ -143,7 +144,7 @@ aplicacion.controller('Municipios', function($scope, $http) {
 
                     // geometry
                         var Geometria=new Array();
-	                    var array_extrude=new Array();
+                        var array_extrude=new Array();
                         var forma_figura=new Array();
                         var extrude_geometria=new Array();
                         var municipios=new Array();
@@ -151,12 +152,14 @@ aplicacion.controller('Municipios', function($scope, $http) {
                         var lineTrasera= new Array();
                         var Vector=new Array();
                         var municipios_valor=new Array();
-                        // extrusión 
+                        var flag;
+                        // extrusión
                         var wfh= new Array();
-					    var datos_extrusion={
-							bevelEnabled: false,
-                            extrudeMaterial: 1,	amount:0.2, //cantidad de profundidad 
-				        };
+                 var xCentro = [];    
+                        var datos_extrusion={
+                            bevelEnabled: false,
+                            extrudeMaterial: 1,    amount:0.2, //cantidad de profundidad
+                        };
                         canvas1 = document.createElement('canvas');
                         context1 = canvas1.getContext('2d');
                         context1.font = "Bold 20px Arial";
@@ -164,22 +167,22 @@ aplicacion.controller('Municipios', function($scope, $http) {
                         context1.fillText('Hello, world!', 0, 20);
 
                         // canvas contents will be used for a texture
-                        texture1 = new THREE.Texture(canvas1) 
+                        texture1 = new THREE.Texture(canvas1)
                         texture1.needsUpdate = true;
                 
                         var spriteMaterial = new THREE.SpriteMaterial( { map: texture1, useScreenCoordinates: true, alignment: THREE.SpriteAlignment.topLeft } );
-	
+    
                         sprite1 = new THREE.Sprite( spriteMaterial );
                         sprite1.scale.set(200,100,1.0);
                         sprite1.position.set( 1000, 1000, 1000 );
-                        scene.add( sprite1 );	
+                        scene.add( sprite1 );    
                 
                         var textura = new THREE.ImageUtils.loadTexture('img/muro.jpg');
-                	//repetir la textura figura
-					   textura.repeat.set(0.06,0.06);
-					//repetir la textura de la figura
-					//textura.wrapS = textura.wrapT = THREE.repeatWrapping; conflicto
-					  function onDocumentMouseMove( event ) {
+                    //repetir la textura figura
+                       textura.repeat.set(0.06,0.06);
+                    //repetir la textura de la figura
+                    //textura.wrapS = textura.wrapT = THREE.repeatWrapping; conflicto
+                      function onDocumentMouseMove( event ) {
 
                                 //event.preventDefault();
                                 sprite1.position.set( event.clientX, event.clientY - 20, 0 );
@@ -187,15 +190,22 @@ aplicacion.controller('Municipios', function($scope, $http) {
                                 mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 
                             }
-                	// agregamos un material para que el punto tenga color
+                    // agregamos un material para que el punto tenga color
                 //Material de la figura
-					   var material = new THREE.MeshBasicMaterial({color:0XFF0000,  vertexColors: THREE.VertexColors,shading: THREE.FlatShading, wireframe:false});
+                       var material = new THREE.MeshBasicMaterial({color:0XFF0000,  vertexColors: THREE.VertexColors,shading: THREE.FlatShading, wireframe:false});
                        var materialFront = new Array();
                        var materialSide = new THREE.MeshBasicMaterial( { color: "#000000"} );
-                                    //	var materialSide1 = new THREE.LineBasicMaterial({color: "#6699FF, linewidth: 1, fog:true});
+                                    //    var materialSide1 = new THREE.LineBasicMaterial({color: "#6699FF, linewidth: 1, fog:true});
                        var materialArray = [ materialFront, materialSide ];
                         //var materialMapa = new THREE.MeshFaceMaterial(materialArray);
                        var star=new Array();
+                
+                
+                
+                    var offsetArray = [];
+                
+                
+                
                         for(i in $scope.datosMunicipio){
                                 console.log(i+"nombre: "+$scope.datosMunicipio[i].nombre)
 
@@ -221,15 +231,24 @@ aplicacion.controller('Municipios', function($scope, $http) {
                                
                                 municipios[i] = new THREE.Mesh( extrude_geometria[i], materialFront[i] );
                                 
+                            municipios[i].geometry.computeBoundingBox();
+                            var offset = municipios[i].geometry.boundingBox.center().negate();
+                           // municipios[i].position.copy(offset);
+                            offsetArray[i]=offset; 
+                                //municipios[i].position.set(i,0,0);
+                            
+                            
                                 municipios[i].name=$scope.datosMunicipio[i].nombre;     
-                               
-                          
+                         //      municipios[i].geometry.computeBoundingBox();
+                       //var bBoxOffset = municipios[i].geometry.boundingBox.center();
+
 
 
                                 scene.add(municipios[i]);
-                                line[i] = new THREE.Line( Geometria[i], materialSide);
+                            
+/*                                line[i] = new THREE.Line( Geometria[i], materialSide);
                                 lineTrasera[i] = new THREE.Line( Geometria[i], materialSide);
-
+                                //municipios[i].position.set(0,0,0);
                                 line[i].position.set( 0, 0, 0.21 );
                                 lineTrasera[i].position.set( 0, 0,-0.01 );
                                  // line.scale.set( 49, 49, 49 );
@@ -237,14 +256,20 @@ aplicacion.controller('Municipios', function($scope, $http) {
 
                                 scene.add( line[i] );
                                 scene.add( lineTrasera[i] );
-
-                           
+*/
+                         
                         }
-                        	projector = new THREE.Projector();
-	
-	// when the mouse moves, call the given function
-	document.addEventListener( 'mousemove', onDocumentMouseMove, false );
-	
+                console.log(offsetArray)
+               /*municipios[0].position.set( -0.4257387912074506, -0.7923656283769498,-0.1 );
+                municipios[1].position.set( 2.5103504397383603, 3.005485998822235,-0.1 );
+                 */
+                 //    municipios[0].position.set( 1, 1,1 );
+
+                            projector = new THREE.Projector();
+    
+    // when the mouse moves, call the given function
+    document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+   
                 
                 
                     
@@ -293,7 +318,7 @@ aplicacion.controller('Municipios', function($scope, $http) {
                         }
                          
                         for(var i in  $scope.datosMunicipio ){
-                            municipios[i].userData={nombre: $scope.datosMunicipio[i].nombre, valorDengue:0 }
+                            municipios[i].userData={nombre: $scope.datosMunicipio[i].nombre, valorDengue:0, orden:i, x:-1, y:-1, z:-1}
                             
                         }
                         
@@ -303,36 +328,174 @@ aplicacion.controller('Municipios', function($scope, $http) {
 function deMenorAMayor(elem1, elem2) {return elem1-elem2;}
 
 function deMayorAMenor(elem1, elem2) {return elem2-elem1;}
+                
+                                     /*  Array.prototype.move = function (old_index, new_index) {
+    if (new_index >= this.length) {
+        var k = new_index - this.length;
+        while ((k--) + 1) {
+            this.push(undefined);
+        }
+    }
+    this.splice(new_index, 0, this.splice(old_index, 1)[0]);
+    return this; // for testing purposes
+};
+                 */
+                
                         // $( "#slider-range-max" ).on( "slide", function( event, ui ) {
-                         $( "#slider-range-max" ).on( "slidestop", function( event, ui ) {
+                
+                
+                
+                  function ordenarMunicipios(){  
+                      
+                      
+                                pintarMun();
+                                var dengueDatos=new Array();  
+                                for (var i in  $scope.datosMunicipio){  
+                                          dengueDatos.push(municipios[i].userData.valorDengue);
+
+                                }       
+                                //console.log(dengueDatos);
+                                var Orden=dengueDatos.sort(deMayorAMenor);
+                                     var indexOrden;
+                                   for (var i in  $scope.datosMunicipio){
+                                        /* if(Orden[i]=="nada"){
+                                            continue;
+                                         }*/
+                                       indexOrden=Orden.indexOf(municipios[i].userData.valorDengue)
+                                            municipios[i].userData.orden=indexOrden;
+                                            Orden[indexOrden]="";
+
+                                   }
+                                  for (var i in $scope.datosMunicipio){
+                                      xCentro.push((i+1)*0.4);
+                                  }
+
+                                 for (var i in  $scope.datosMunicipio){
+                                 //municipios[i].material.color.set("#CC7722");
+
+                                 camera.lookAt(scene.position);    
+                                camera.position.set(   -5.1239860576815826,  -2.981872176737795,  36.70493502492447)
+                                camera.lookAt(scene.position);
+
+                                     if(municipios[i].userData.orden<=4){
+                                         //console.log(offsetArray[i].x +  "offsetArray[i].x" + i+ "i" )
+
+
+                                        var tween = new TWEEN.Tween(municipios[i].position).to({ x: (offsetArray[i].x-8) + municipios[i].userData.orden*2.8, y: (offsetArray[i].y+10), z: offsetArray[i].z  }, 3000).start();
+                                        //tween.easing(TWEEN.Easing.Elastic.InOut);
+                                       //tween.repeat(Infinity);
+                                        tween.yoyo(true);
+                                     }
+
+                                      if(municipios[i].userData.orden>4 && municipios[i].userData.orden<=9){
+                                       var tween = new TWEEN.Tween(municipios[i].position).to({ x: (offsetArray[i].x-22) + municipios[i].userData.orden*2.8, y: (offsetArray[i].y+5), z: offsetArray[i].z  }, 3000).start();
+                                        //tween.easing(TWEEN.Easing.Elastic.InOut);
+                                       //tween.repeat(Infinity);
+                                        tween.yoyo(true);
+                                     }
+
+                                       if(municipios[i].userData.orden>9 && municipios[i].userData.orden<=14){
+                                        var tween = new TWEEN.Tween(municipios[i].position).to({ x: (offsetArray[i].x-36) + municipios[i].userData.orden*2.8, y:offsetArray[i].y, z: offsetArray[i].z }, 3000).start();
+                                        //tween.easing(TWEEN.Easing.Elastic.InOut);
+                                       //tween.repeat(Infinity);
+                                        tween.yoyo(true);
+                                     }
+
+                                       if(municipios[i].userData.orden>14 && municipios[i].userData.orden<=19){
+                                        var tween = new TWEEN.Tween(municipios[i].position).to({ x: (offsetArray[i].x-50) + municipios[i].userData.orden*2.8, y:offsetArray[i].y-5, z: offsetArray[i].z }, 3000).start();
+                                        //tween.easing(TWEEN.Easing.Elastic.InOut);
+                                       //tween.repeat(Infinity);
+                                        tween.yoyo(true);
+                                     }
+
+                                      if(municipios[i].userData.orden>19 && municipios[i].userData.orden<=24){
+                                       var tween = new TWEEN.Tween(municipios[i].position).to({ x: (offsetArray[i].x-64) + municipios[i].userData.orden*2.8, y:offsetArray[i].y-10, z: offsetArray[i].z }, 3000).start();
+                                        //tween.easing(TWEEN.Easing.Elastic.InOut);
+                                       //tween.repeat(Infinity);
+                                        tween.yoyo(true);
+                                     }
+
+                                      if(municipios[i].userData.orden>24){
+                                        var tween = new TWEEN.Tween(municipios[i].position).to({ x: (offsetArray[i].x-78) + municipios[i].userData.orden*2.8, y:offsetArray[i].y-13, z: offsetArray[i].z }, 3000).start();
+                                        //tween.easing(TWEEN.Easing.Elastic.InOut);
+                                       //tween.repeat(Infinity);
+                                        tween.yoyo(true);
+                                     }
+
+
+
+                                     
+                                 } 
+                              }
+                
+                      $( "#slider-range-max" ).on( "slide", function( event, ui ) {
                             anio= $( "#amount" ).val( ui.value );
                             anio=($( "#amount" ).val());
-                            
-                            
-                        var dengueDatos=new Array();  
-                        for (var i in  $scope.datosMunicipio){
-                                  vector_lat.push($scope.datosMunicipio[i].coordenadas.latitud);
-                                  vector_long.push($scope.datosMunicipio[i].coordenadas.longitud);
-                                  dengueDatos.push(municipios[i].userData.valorDengue);
+                    
+                    
+                          
+                          
+                    if((($("#mundoOmun").val())=="mundo")){ 
+                        
+                        
+                        
+                             pintarMun();
+                                               
 
-                        }       
-                        console.log(dengueDatos);
-                             var algo=dengueDatos.sort(deMayorAMenor);
-                             console.log(algo);
-                            pintarMun();
-                       });  
+                      }
+                          
+                    if((($("#mundoOmun").val())=="municipios")){
+                            ordenarMunicipios();
+                                
+                          }
+             
+
+                        console.log(municipios);  
+
+
+                       });
+                
+
+                
+                
+                     
+                     
                         
                     
                         var array_saberObjmeses=Object.keys(array_anio[0][0]);
                // console.log(array_saberObjmeses)  
                 
-                
+                  $("#mundo").click(function() {
+                            $("#mundo").addClass("active");
+                            $("#municipios").removeClass("active");
+                            $("#mundoOmun").val("mundo");
+                            // camera.position.set(2.4457938219139463,  0,  17.37913738929295);
+                            //pintarMun();
+                            camera.position.set(2.4457938219139463,  0,  17.37913738929295);
+                            camera.lookAt(scene.position);
+                            for (var i in $scope.datosMunicipio){
+                            var tween = new TWEEN.Tween(municipios[i].position).to({ x: 0, y:0, z:0 }, 3000).start();
+                                            //tween.easing(TWEEN.Easing.Elastic.InOut);
+                                           //tween.repeat(Infinity);
+                                            tween.yoyo(true);
+                            }
+                        })  
+                          
+                          
+                        $("#municipios").click(function() {
+                            $("#mundo").removeClass("active");
+                            $("#municipios").addClass("active");
+                           $("#mundoOmun").val("municipios");
+                            ordenarMunicipios();
+                            
+                        
+                        })  
                          function pintarMun(){
-
+                           
                           
                         var posicion_anio="";
                          posicion_anio=array_saberObjanio.indexOf(String(anio));
-                         var hayCeroCaso=false; 
+                         var hayCeroCaso=false;
 
 
 
@@ -390,7 +553,7 @@ function deMayorAMenor(elem1, elem2) {return elem2-elem1;}
                                         }
                                     }
 
-                                  // var max = Math.max.apply(null, array_dengue); 
+                                  // var max = Math.max.apply(null, array_dengue);
                                     var max =(array_dengue[0]==null || array_dengue[0]==0 )?(0):array_dengue[0];
                                      for(var n in array_dengue){
                                             if(array_dengue[n]==null ){
@@ -401,7 +564,7 @@ function deMayorAMenor(elem1, elem2) {return elem2-elem1;}
                                         }
                                     }
 
-                                   var nulos=0; 
+                                   var nulos=0;
                                    for(var i in municipios){
                                         if ((municipios[i].visible)==false){
                                             nulos++;
@@ -453,13 +616,13 @@ function deMayorAMenor(elem1, elem2) {return elem2-elem1;}
 
 
                                                  }
-                                               }	
+                                               }    
 
                                                 municipios[i].visible=true;
 
 
 
-                                                tabla+=	 "<tr><td align='center' bgcolor="+"'"+(municipios[i].material.color.getHex().toString(16))+"'"+" style='border:0px solid #000000; '>"+"</td><td align='center' style='height:1px;'>"+municipios[i].userData.nombre+"</td><td align='center' >"+municipios[i].userData.valorDengue+"</td></tr>";  
+                                                tabla+=     "<tr><td align='center' bgcolor="+"'"+(municipios[i].material.color.getHex().toString(16))+"'"+" style='border:0px solid #000000; '>"+"</td><td align='center' style='height:1px;'>"+municipios[i].userData.nombre+"</td><td align='center' >"+municipios[i].userData.valorDengue+"</td></tr>";  
 
 
 
@@ -470,7 +633,7 @@ function deMayorAMenor(elem1, elem2) {return elem2-elem1;}
 
                                    }//cierre del nulos
                                else{
-                                         $('.ocultar').hide({ effect: "fade"}); 
+                                         $('.ocultar').hide({ effect: "fade"});
                                          document.getElementById('tablas').innerHTML ='';
                                          //document.getElementById('marcarTodo').checked=false;
 
@@ -486,7 +649,7 @@ function deMayorAMenor(elem1, elem2) {return elem2-elem1;}
                                                 var colorhex=i;
                                                 colorhex=(d2h(colorhex));
                                                 colorhex="#FF"+(colorhex.length==1?"0"+colorhex:colorhex)+"00";
-                                            //	alert(colorhex);
+                                            //    alert(colorhex);
                                                 tabla2+="<tr><td width='25'  align='center' bgcolor="+"'"+colorhex+"'"+"> </td></tr>";  
 
                                             }*/
@@ -511,17 +674,17 @@ function deMayorAMenor(elem1, elem2) {return elem2-elem1;}
                                 
                             }
                             $("#myTable").tablesorter( {sortList: [[2,1]],  
-                                                        headers: { 
-                    // assign the secound column (we start counting zero) 
-                                                            0: { 
-                                                                // disable it by setting the property sorter to false 
-                                                                sorter: false 
-                                                                }, 
+                                                        headers: {
+                    // assign the secound column (we start counting zero)
+                                                            0: {
+                                                                // disable it by setting the property sorter to false
+                                                                sorter: false
+                                                                },
                                                         }
                                                       } );
 
                        }//fin funcion
-                                 //***************************** 
+                                 //*****************************
                 var marcarCheck=undefined;
  
 var concatena_municipios="<center><table>";
@@ -542,21 +705,24 @@ var concatena_municipios="<center><table>";
                                             //height: 'auto',
                                             height: 120,
                                             width:300,
-                                            position: ["left","bottom"],	
+                                            position: ["left","bottom"],    
                                             resizable: true,
                                             dialogClass: 'dialogWithDropShadow',
-                                            hide: { effect: "blind", duration: 400 } 
+                                            hide: { effect: "blind", duration: 400 }
                     })
                     
                 });
                 */
  
                 
+               
+                
+                
                 $("#fullscreen").click(function() {
                     
-                    alterna_modo_de_pantalla();
-                
+			             THREEx.FullScreen.request();                
                 });
+                /*
                 $("#fullscreen").mouseover(function() {
                     
                    $('#fullscreen').css('opacity','0.8'); ;
@@ -564,10 +730,10 @@ var concatena_municipios="<center><table>";
                 });
                  $("#fullscreen").mouseout(function() {
                     
-                   $('#fullscreen').css('opacity','1'); 
+                   $('#fullscreen').css('opacity','1');
                 
                 });
-                
+                */
                 
                /*  //$("#cont").css('display','none');    
                 $('#header').mouseenter(function(){
@@ -609,7 +775,7 @@ var concatena_municipios="<center><table>";
                     /*      $( "#cargar_datos").data('dialog').uiDialog.draggable('option', {
                                 cancel: '.ui-dialog-titlebar-close',
                                 handle: '.ui-dialog-titlebar, .ui-dialog-content'
-                            }); 
+                            });
                                 $( "#accordion" ).accordion({
       collapsible: true,
                                      heightStyle: "content"
@@ -623,13 +789,13 @@ var concatena_municipios="<center><table>";
                          
                                 if($(".marcarTodo").is(':checked')){               
                                         $("input[class='mun_checkbox']").prop('checked', true);        
-                                        //$("input[type=checkbox]").prop('checked', true); 
+                                        //$("input[type=checkbox]").prop('checked', true);
                                 
 
                                 }
                                 else{               
                                         $("input[class='mun_checkbox']").prop('checked', false);        
-                                        //$("input[type=checkbox]").prop('checked', true); 
+                                        //$("input[type=checkbox]").prop('checked', true);
                                                             //     $("#mostrarTabla").hide();
 
 
@@ -655,7 +821,7 @@ var concatena_municipios="<center><table>";
     
                 
      
-											
+                                            
                /* $(function() {
 
                     $("#mostrarTabla").click(function() {
@@ -665,7 +831,7 @@ var concatena_municipios="<center><table>";
                             width: 420,
                             position: ["left",100],
                             dialogClass: 'dialogWithDropShadow',
-                            hide: { effect: "blind", duration: 400 } 
+                            hide: { effect: "blind", duration: 400 }
 
 
                     });
@@ -693,7 +859,7 @@ var concatena_municipios="<center><table>";
                 pintarMun();
                 
                         // figura
-                                    	/*  municipios[0].material.color.set( "#00FF00" );
+                                        /*  municipios[0].material.color.set( "#00FF00" );
                        municipios[2].visible = false;
                                          line[2].visible = false;
                                          lineTrasera[2].visible = false;
@@ -739,94 +905,114 @@ function render() {
                     //scene.add( new THREE.AxisHelper() );
 
                     // render
+                                  
+                         var inc=0;
+                  var vector = new THREE.Vector3();
                     function render() {
+   // $("#animacion").val('false');
+                      
 
+TWEEN.update();
                         renderer.render( scene, camera );
+                        //console.log(camera.position);
+                       
+
+                      /*  console.log(camera.fov)
+                        console.log(camera.near)
+                        console.log(camera.far)
+                        */
+                        //camera.updateProjectionMatrix();
+                        //console.log(camera.PerspectiveCamera);
 
                     }
           
-                
 function update()
 {
-	// find intersections
+                                 
 
-	// create a Ray with origin at the mouse position
-	//   and direction into the scene (camera direction)
-	var vector = new THREE.Vector3( mouse.x, mouse.y, 1 );
-	projector.unprojectVector( vector, camera );
-	
+   // if( municipios[24].position.x<5){
+                           
+    //}
+
+    // find intersections
+
+    // create a Ray with origin at the mouse position
+    //   and direction into the scene (camera direction)
+    var vector = new THREE.Vector3( mouse.x, mouse.y, 1 );
+    projector.unprojectVector( vector, camera );
+    
     
 
-			
+            
     
     
     
     var ray = new THREE.Raycaster( camera.position, vector.sub( camera.position ).normalize() );
 
-	// create an array containing all objects in the scene with which the ray intersects
-	var intersects = ray.intersectObjects( municipios );
+    // create an array containing all objects in the scene with which the ray intersects
+    var intersects = ray.intersectObjects( municipios );
     
-	// INTERSECTED = the object in the scene currently closest to the camera 
-	//		and intersected by the Ray projected from the mouse position 	
-	
-	// if there is one (or more) intersections
-	if ( intersects.length > 0 )
-	{
-		// if the closest object intersected is not the currently stored intersection object
-		if ( intersects[ 0 ].object != INTERSECTED ) 
-		{
-		    // restore previous intersection object (if it exists) to its original color
-			if ( INTERSECTED ) 
-				INTERSECTED.material.color.setHex( INTERSECTED.currentHex );
-			// store reference to closest object as current intersection object
-			INTERSECTED = intersects[ 0 ].object;
-			// store color of closest object (for later restoration)
-			INTERSECTED.currentHex = INTERSECTED.material.color.getHex();
-			// set a new color for closest object
-			INTERSECTED.material.color.set("#4682B4");
+    // INTERSECTED = the object in the scene currently closest to the camera
+    //        and intersected by the Ray projected from the mouse position     
+    
+    // if there is one (or more) intersections
+    if ( intersects.length > 0 )
+    {
+        // if the closest object intersected is not the currently stored intersection object
+        if ( intersects[ 0 ].object != INTERSECTED )
+        {
+            // restore previous intersection object (if it exists) to its original color
+            if ( INTERSECTED )
+                INTERSECTED.material.color.setHex( INTERSECTED.currentHex );
+            // store reference to closest object as current intersection object
+            INTERSECTED = intersects[ 0 ].object;
+            // store color of closest object (for later restoration)
+            INTERSECTED.currentHex = INTERSECTED.material.color.getHex();
+            // set a new color for closest object
+            INTERSECTED.material.color.set("#4682B4");
             material.color.set("#4682B4");
             // update text, if it has a "name" field.
-			if ( intersects[ 0 ].object.name )
-			{
-			    context1.clearRect(0,0,640,480);
-				var message = intersects[ 0 ].object.name+": "+intersects[ 0 ].object.userData.valorDengue;
-				var metrics = context1.measureText(message);
-				var width = metrics.width;
-				context1.fillStyle = "rgba(0,0,0,0.95)"; // black border
-				context1.fillRect( 0,0, width+8,20+8);
-				context1.fillStyle = "rgba(255,255,255,0.95)"; // white filler
-				context1.fillRect( 2,2, width+4,20+4 );
-				context1.fillStyle = "rgba(0,0,0,1)"; // text color
-				context1.fillText( message, 4,20 );
-				texture1.needsUpdate = true;
-			}
-			else
-			{
-				context1.clearRect(0,0,300,300);
-				texture1.needsUpdate = true;
-			}
-		}
-	} 
-	else // there are no intersections
-	{
-		// restore previous intersection object (if it exists) to its original color
-        if ( INTERSECTED ) 
-			INTERSECTED.material.color.setHex( INTERSECTED.currentHex );
-		// remove previous intersection object reference
-		//     by setting current intersection object to "nothing"
-		INTERSECTED = null;
-		context1.clearRect(0,0,300,300);
-		texture1.needsUpdate = true;
-	}
+            if ( intersects[ 0 ].object.name )
+            {
+                context1.clearRect(0,0,640,480);
+                var message = intersects[ 0 ].object.name+": "+intersects[ 0 ].object.userData.valorDengue;
+                var metrics = context1.measureText(message);
+                var width = metrics.width;
+                context1.fillStyle = "rgba(0,0,0,0.95)"; // black border
+                context1.fillRect( 0,0, width+8,20+8);
+                context1.fillStyle = "rgba(255,255,255,0.95)"; // white filler
+                context1.fillRect( 2,2, width+4,20+4 );
+                context1.fillStyle = "rgba(0,0,0,1)"; // text color
+                context1.fillText( message, 4,20 );
+                texture1.needsUpdate = true;
+            }
+            else
+            {
+                context1.clearRect(0,0,300,300);
+                texture1.needsUpdate = true;
+            }
+        }
+    }
+    else // there are no intersections
+    {
+        // restore previous intersection object (if it exists) to its original color
+        if ( INTERSECTED )
+            INTERSECTED.material.color.setHex( INTERSECTED.currentHex );
+        // remove previous intersection object reference
+        //     by setting current intersection object to "nothing"
+        INTERSECTED = null;
+        context1.clearRect(0,0,300,300);
+        texture1.needsUpdate = true;
+    }
 
 /*
-	if ( keyboard.pressed("z") ) 
-	{ 
-		// do something
-	}
-*/	
-	controls.update();
-	//stats.update();
+    if ( keyboard.pressed("z") )
+    {
+        // do something
+    }
+*/    
+    controls.update();
+    //stats.update();
 }
 
                     // animate/*
@@ -857,3 +1043,9 @@ function update()
 
     
 }); //SCRIPT bueno
+
+    
+
+ 
+
+     

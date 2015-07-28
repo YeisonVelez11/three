@@ -31,6 +31,7 @@
     <script type="text/javascript" src="javascripts/THREEx.WindowResize.js"></script>
     <script type="text/javascript" src="javascripts/THREEx.FullScreen.js"></script>
     <script type="text/javascript" src="javascripts/THREEx.KeyboardState.js"></script>
+      <script type="text/javascript" src="javascripts/tween.min.js"></script>
 	<!--
 	<!--// dibujar poligonos http://www.birdtheme.org/useful/v3tool.html
 http://www.gadm.org/download
@@ -80,7 +81,6 @@ background-color: "#000000";
         
                     </div>
 
-               
             
             </center>
        <input type='hidden' name='lat' id='lat' >
@@ -98,7 +98,7 @@ background-color: "#000000";
         <div id='cargar_datos' title='Cargar Datos:' style='display: none'>
             <div id="accordion" >
            
-            
+      
            
             <h3>Municipios</h3>
             <div id="mun">
@@ -122,9 +122,16 @@ background-color: "#000000";
 		
 	
     </div>
-		
-		      <img id='fullscreen' src='../img/expandir.png' style='position:fixed; bottom:0px; right:0px;width:25px; heigth:25px;'  title='Pantalla Completa' style='position:absolute; bottom:0; right:0; cursor: pointer' ></img>
-            
+		      <button type='button' id='mundo' class='btn btn-default active'> 
+                    <span class="glyphicon glyphicon-globe"></span>
+              </button>
+        <button type="button" id='municipios'  class="btn btn-default">
+           <span class="icon-mapa"></span>
+        </button>
+                  <input type="hidden" id='mundoOmun' value='mundo' >
+
+		<!--      <img id='fullscreen' src='../img/expandir.png' style='position:fixed; bottom:0px; right:0px;width:25px; heigth:25px;'  title='Pantalla Completa' style='position:absolute; bottom:0; right:0; cursor: pointer' ></img>
+            -->
 
 
 		

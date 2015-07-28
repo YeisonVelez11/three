@@ -26,14 +26,60 @@ body
 }
 #contiene_tablas{
     position: absolute;
-	right:56px;
-    top:8px;
+	right:3%;
+    top:0%;
     font-size:11px;
      
     /* max-height:400px;
      overflow-y: scroll;*/
     
 }
+
+
+    
+.icon-mapa {
+    display: block;
+    width: 25px;
+    height: 16px;
+    background-image: url("../img/mapa.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    margin-left: 0px;
+    margin-right: -1px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    
+    
+}
+
+#municipios{
+    position: absolute;
+	left:4.1%;
+    bottom:1%;
+            width:47px;
+
+    /*font-size:11px;*/
+     
+    /* max-height:400px;
+     overflow-y: scroll;*/    
+}
+
+#mundo{
+    position: absolute;
+	left:1.2%;
+    bottom:1%;
+        width:47px;
+
+    /*font-size:11px;*/
+     
+    /* max-height:400px;
+     overflow-y: scroll;*/    
+}
+
 /*
 #tablas{
     position: absolute;
