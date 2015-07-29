@@ -36,14 +36,14 @@ aplicacion.controller('Municipios', function($scope, $http) {
 
                         
       var municipios=[];
-      var anio=2015;
+      var anio=2014;
        //$( "#slider-range-max" ).hide();
           $( "#slider-range-max" ).slider({
 
                               range: "min",
                               min: 2007,
                               max: 2015,
-                              value: 2015,
+                              value: 2014,
                               animate: true,
                               slide: function( event, ui ) {
 
@@ -194,7 +194,7 @@ aplicacion.controller('Municipios', function($scope, $http) {
                 //Material de la figura
                        var material = new THREE.MeshBasicMaterial({color:0XFF0000,  vertexColors: THREE.VertexColors,shading: THREE.FlatShading, wireframe:false});
                        var materialFront = new Array();
-                       var materialSide = new THREE.MeshBasicMaterial( { color: "#000000"} );
+                       var materialSide = new THREE.LineBasicMaterial( { color: "#000000"} );
                                     //    var materialSide1 = new THREE.LineBasicMaterial({color: "#6699FF, linewidth: 1, fog:true});
                        var materialArray = [ materialFront, materialSide ];
                         //var materialMapa = new THREE.MeshFaceMaterial(materialArray);
@@ -242,11 +242,11 @@ aplicacion.controller('Municipios', function($scope, $http) {
                          //      municipios[i].geometry.computeBoundingBox();
                        //var bBoxOffset = municipios[i].geometry.boundingBox.center();
 
-
+                                
 
                                 scene.add(municipios[i]);
                             
-/*                                line[i] = new THREE.Line( Geometria[i], materialSide);
+                               line[i] = new THREE.Line( Geometria[i], materialSide);
                                 lineTrasera[i] = new THREE.Line( Geometria[i], materialSide);
                                 //municipios[i].position.set(0,0,0);
                                 line[i].position.set( 0, 0, 0.21 );
@@ -256,10 +256,11 @@ aplicacion.controller('Municipios', function($scope, $http) {
 
                                 scene.add( line[i] );
                                 scene.add( lineTrasera[i] );
-*/
+                                
                          
                         }
-                console.log(offsetArray)
+                
+                //console.log(offsetArray)
                /*municipios[0].position.set( -0.4257387912074506, -0.7923656283769498,-0.1 );
                 municipios[1].position.set( 2.5103504397383603, 3.005485998822235,-0.1 );
                  */
@@ -318,8 +319,9 @@ aplicacion.controller('Municipios', function($scope, $http) {
                         }
                          
                         for(var i in  $scope.datosMunicipio ){
-                            municipios[i].userData={nombre: $scope.datosMunicipio[i].nombre, valorDengue:0, orden:i, x:-1, y:-1, z:-1}
-                            
+                            municipios[i].userData={nombre: $scope.datosMunicipio[i].nombre, valorDengue:0, orden:i};
+                            line[i].userData={nombre: $scope.datosMunicipio[i].nombre, valorDengue:0, orden:i};
+                            lineTrasera[i].userData={nombre: $scope.datosMunicipio[i].nombre, valorDengue:0, orden:i};
                         }
                         
                         //método para cambiar de año
@@ -329,20 +331,7 @@ function deMenorAMayor(elem1, elem2) {return elem1-elem2;}
 
 function deMayorAMenor(elem1, elem2) {return elem2-elem1;}
                 
-                                     /*  Array.prototype.move = function (old_index, new_index) {
-    if (new_index >= this.length) {
-        var k = new_index - this.length;
-        while ((k--) + 1) {
-            this.push(undefined);
-        }
-    }
-    this.splice(new_index, 0, this.splice(old_index, 1)[0]);
-    return this; // for testing purposes
-};
-                 */
-                
-                        // $( "#slider-range-max" ).on( "slide", function( event, ui ) {
-                
+                      
                 
                 
                   function ordenarMunicipios(){  
@@ -363,6 +352,8 @@ function deMayorAMenor(elem1, elem2) {return elem2-elem1;}
                                          }*/
                                        indexOrden=Orden.indexOf(municipios[i].userData.valorDengue)
                                             municipios[i].userData.orden=indexOrden;
+                                            line[i].userData.orden=indexOrden;
+                                            lineTrasera[i].userData.orden=indexOrden;
                                             Orden[indexOrden]="";
 
                                    }
@@ -378,15 +369,16 @@ function deMayorAMenor(elem1, elem2) {return elem2-elem1;}
                                 camera.lookAt(scene.position);
 
                                      if(municipios[i].userData.orden<=4){
-                                         //console.log(offsetArray[i].x +  "offsetArray[i].x" + i+ "i" )
 
 
                                         var tween = new TWEEN.Tween(municipios[i].position).to({ x: (offsetArray[i].x-8) + municipios[i].userData.orden*2.8, y: (offsetArray[i].y+10), z: offsetArray[i].z  }, 3000).start();
                                         //tween.easing(TWEEN.Easing.Elastic.InOut);
                                        //tween.repeat(Infinity);
                                         tween.yoyo(true);
+//line[i].position.set( 0, 0, 0.21 );
                                      }
 
+                                
                                       if(municipios[i].userData.orden>4 && municipios[i].userData.orden<=9){
                                        var tween = new TWEEN.Tween(municipios[i].position).to({ x: (offsetArray[i].x-22) + municipios[i].userData.orden*2.8, y: (offsetArray[i].y+5), z: offsetArray[i].z  }, 3000).start();
                                         //tween.easing(TWEEN.Easing.Elastic.InOut);
@@ -422,6 +414,97 @@ function deMayorAMenor(elem1, elem2) {return elem2-elem1;}
                                         tween.yoyo(true);
                                      }
 
+                                if(line[i].userData.orden<=4){
+
+
+                                        var tween = new TWEEN.Tween(line[i].position).to({ x: (offsetArray[i].x-8) + line[i].userData.orden*2.8, y: (offsetArray[i].y+10), z: offsetArray[i].z +0.21  }, 3000).start();
+                                        //tween.easing(TWEEN.Easing.Elastic.InOut);
+                                       //tween.repeat(Infinity);
+                                        tween.yoyo(true);
+//line[i].position.set( 0, 0, 0.21 );
+                                     }
+
+                           
+                                      if(line[i].userData.orden>4 && line[i].userData.orden<=9){
+                                       var tween = new TWEEN.Tween(line[i].position).to({ x: (offsetArray[i].x-22) + line[i].userData.orden*2.8, y: (offsetArray[i].y+5), z: offsetArray[i].z +0.21  }, 3000).start();
+                                        //tween.easing(TWEEN.Easing.Elastic.InOut);
+                                       //tween.repeat(Infinity);
+                                        tween.yoyo(true);
+                                     }
+
+                                       if(line[i].userData.orden>9 && line[i].userData.orden<=14){
+                                        var tween = new TWEEN.Tween(line[i].position).to({ x: (offsetArray[i].x-36) + line[i].userData.orden*2.8, y:offsetArray[i].y, z: offsetArray[i].z+0.21  }, 3000).start();
+                                        //tween.easing(TWEEN.Easing.Elastic.InOut);
+                                       //tween.repeat(Infinity);
+                                        tween.yoyo(true);
+                                     }
+
+                                       if(line[i].userData.orden>14 && line[i].userData.orden<=19){
+                                        var tween = new TWEEN.Tween(line[i].position).to({ x: (offsetArray[i].x-50) + line[i].userData.orden*2.8, y:offsetArray[i].y-5, z: offsetArray[i].z +0.21 }, 3000).start();
+                                        //tween.easing(TWEEN.Easing.Elastic.InOut);
+                                       //tween.repeat(Infinity);
+                                        tween.yoyo(true);
+                                     }
+
+                                      if(line[i].userData.orden>19 && line[i].userData.orden<=24){
+                                       var tween = new TWEEN.Tween(line[i].position).to({ x: (offsetArray[i].x-64) + line[i].userData.orden*2.8, y:offsetArray[i].y-10, z: offsetArray[i].z +0.21 }, 3000).start();
+                                        //tween.easing(TWEEN.Easing.Elastic.InOut);
+                                       //tween.repeat(Infinity);
+                                        tween.yoyo(true);
+                                     }
+
+                                      if(line[i].userData.orden>24){
+                                        var tween = new TWEEN.Tween(line[i].position).to({ x: (offsetArray[i].x-78) + line[i].userData.orden*2.8, y:offsetArray[i].y-13, z: offsetArray[i].z +0.21 }, 3000).start();
+                                        //tween.easing(TWEEN.Easing.Elastic.InOut);
+                                       //tween.repeat(Infinity);
+                                        tween.yoyo(true);
+                                     }
+
+                                     if(lineTrasera[i].userData.orden<=4){
+
+
+                                        var tween = new TWEEN.Tween(lineTrasera[i].position).to({ x: (offsetArray[i].x-8) + lineTrasera[i].userData.orden*2.8, y: (offsetArray[i].y+10), z: offsetArray[i].z -0.01 }, 3000).start();
+                                        //tween.easing(TWEEN.Easing.Elastic.InOut);
+                                       //tween.repeat(Infinity);
+                                        tween.yoyo(true);
+//lineTrasera[i].position.set( 0, 0, -0.01 );
+                                     }
+
+                           
+                                      if(lineTrasera[i].userData.orden>4 && lineTrasera[i].userData.orden<=9){
+                                       var tween = new TWEEN.Tween(lineTrasera[i].position).to({ x: (offsetArray[i].x-22) + lineTrasera[i].userData.orden*2.8, y: (offsetArray[i].y+5), z: offsetArray[i].z -0.01  }, 3000).start();
+                                        //tween.easing(TWEEN.Easing.Elastic.InOut);
+                                       //tween.repeat(Infinity);
+                                        tween.yoyo(true);
+                                     }
+
+                                       if(lineTrasera[i].userData.orden>9 && lineTrasera[i].userData.orden<=14){
+                                        var tween = new TWEEN.Tween(lineTrasera[i].position).to({ x: (offsetArray[i].x-36) + lineTrasera[i].userData.orden*2.8, y:offsetArray[i].y, z: offsetArray[i].z -0.01 }, 3000).start();
+                                        //tween.easing(TWEEN.Easing.Elastic.InOut);
+                                       //tween.repeat(Infinity);
+                                        tween.yoyo(true);
+                                     }
+
+                                       if(lineTrasera[i].userData.orden>14 && lineTrasera[i].userData.orden<=19){
+                                        var tween = new TWEEN.Tween(lineTrasera[i].position).to({ x: (offsetArray[i].x-50) + lineTrasera[i].userData.orden*2.8, y:offsetArray[i].y-5, z: offsetArray[i].z -0.01  }, 3000).start();
+                                        //tween.easing(TWEEN.Easing.Elastic.InOut);
+                                       //tween.repeat(Infinity);
+                                        tween.yoyo(true);
+                                     }
+
+                                      if(lineTrasera[i].userData.orden>19 && lineTrasera[i].userData.orden<=24){
+                                       var tween = new TWEEN.Tween(lineTrasera[i].position).to({ x: (offsetArray[i].x-64) + lineTrasera[i].userData.orden*2.8, y:offsetArray[i].y-10, z: offsetArray[i].z -0.01  }, 3000).start();
+                                        //tween.easing(TWEEN.Easing.Elastic.InOut);
+                                       //tween.repeat(Infinity);
+                                        tween.yoyo(true);
+                                     }
+
+                                      if(lineTrasera[i].userData.orden>24){
+                                        var tween = new TWEEN.Tween(lineTrasera[i].position).to({ x: (offsetArray[i].x-78) + lineTrasera[i].userData.orden*2.8, y:offsetArray[i].y-13, z: offsetArray[i].z -0.01  }, 3000).start();
+                                        //tween.easing(TWEEN.Easing.Elastic.InOut);
+                                       //tween.repeat(Infinity);
+                                        tween.yoyo(true);
+                                     }
 
 
                                      
@@ -450,7 +533,7 @@ function deMayorAMenor(elem1, elem2) {return elem2-elem1;}
                           }
              
 
-                        console.log(municipios);  
+                        //console.log(municipios);  
 
 
                        });
@@ -475,6 +558,16 @@ function deMayorAMenor(elem1, elem2) {return elem2-elem1;}
                             camera.lookAt(scene.position);
                             for (var i in $scope.datosMunicipio){
                             var tween = new TWEEN.Tween(municipios[i].position).to({ x: 0, y:0, z:0 }, 3000).start();
+                                            //tween.easing(TWEEN.Easing.Elastic.InOut);
+                                           //tween.repeat(Infinity);
+                                            tween.yoyo(true);
+                                
+                             var tween = new TWEEN.Tween(line[i].position).to({ x: 0, y:0, z:0.21 }, 3000).start();
+                                            //tween.easing(TWEEN.Easing.Elastic.InOut);
+                                           //tween.repeat(Infinity);
+                                            tween.yoyo(true);
+                                
+                              var tween = new TWEEN.Tween(lineTrasera[i].position).to({ x: 0, y:0, z:-0.01 }, 3000).start();
                                             //tween.easing(TWEEN.Easing.Elastic.InOut);
                                            //tween.repeat(Infinity);
                                             tween.yoyo(true);
@@ -579,7 +672,7 @@ function deMayorAMenor(elem1, elem2) {return elem2-elem1;}
                                        $('.ocultar').show('fade');
 
                                        var tabla="<table id='myTable' class='tablesorter' style='border: 0px solid; border-collapse: separate;border-spacing: 0px 5.5px;' > <thead><tr><th>Riesgo</th><th>Municipio</th><th>Casos</th>                           </tr> </thead><tbody>";
-
+                                       var color="";
                                        for (var i in  municipios){
 
 
@@ -590,7 +683,7 @@ function deMayorAMenor(elem1, elem2) {return elem2-elem1;}
 
                                                var denominador=parseInt(max)-parseInt(min);
                                                if(denominador==0 && municipios[i].userData.valorDengue!=0){
-                                                municipios[i].material.color.set("#FF"+"00"+"00");
+                                                color="#FF"+"00"+"00";
                                                      //municipios[i].setMap(map);
 
                                                }
@@ -608,19 +701,20 @@ function deMayorAMenor(elem1, elem2) {return elem2-elem1;}
                                                     colorhex=colorhex.toUpperCase();
 
 
-                                                    municipios[i].material.color.set(colorhex);
+                                                   color=colorhex;
 
                                                 if(municipios[i].userData.valorDengue==(0)){
                                                     
-                                                     municipios[i].material.color.set("#FFFFFF");
+                                                     color="#FFFFFF";
 
 
                                                  }
                                                }    
-
+                                                municipios[i].material.color.set(color);
                                                 municipios[i].visible=true;
-
-
+/*
+tween = new TWEEN.Tween( color ).to( { r: 0, g: 0.1, b: 0.45 }, 5000 ).start();
+*/
 
                                                 tabla+=     "<tr><td align='center' bgcolor="+"'"+(municipios[i].material.color.getHex().toString(16))+"'"+" style='border:0px solid #000000; '>"+"</td><td align='center' style='height:1px;'>"+municipios[i].userData.nombre+"</td><td align='center' >"+municipios[i].userData.valorDengue+"</td></tr>";  
 
